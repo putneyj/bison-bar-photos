@@ -86,6 +86,8 @@
               }
               swapImages();
             }
+          } else if (freshStart) {
+            swapImages();
           }
         });
         setTimeout(updateImageList, minutesBetweenUpdates * 60 * 1000);
