@@ -17,10 +17,7 @@
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script type="text/javascript">
-window.location = '/gallery.html';
-</script>
-<meta http-equiv="refresh" content="0;URL='/gallery.html'" />
+<meta http-equiv="refresh" content="0;URL='http://bison.putney.io/gallery.html'" />
 <link rel="profile" href="http://gmpg.org/xfn/11">
 
 <?php wp_head(); ?>
