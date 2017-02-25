@@ -15,6 +15,10 @@
  * @version 1.0
  */
 
+$location = get_site_url() . "/bison/gallery";
+wp_redirect( $location, 301 );
+exit; 
+
 get_header(); ?>
 
 <div class="wrap">
