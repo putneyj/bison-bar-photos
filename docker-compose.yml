@@ -1,0 +1,27 @@
+version: '2'
+services:
+  wordpress-bison:
+    build: .
+    volumes:
+      - ./src/:/var/www/html
+    ports:
+      - "8181:80"
+    links:
+      - php-bison
+  php-bison:
+    image: wodby/wordpress-php:latest
+    volumes:
+      - ./src/:/var/www/html
+    ports:
+      - "9000:9000"
+    links:
+      - mysql-bison
+  mysql-bison:
+    image: mariadb:5.5
+    volumes:
+      - /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: wp
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: wp

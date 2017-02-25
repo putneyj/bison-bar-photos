@@ -1,0 +1,19 @@
+FROM php:7.0.6-fpm-alpine
+MAINTAINER Jonathan Putney <jonathan@putney.io>
+
+RUN echo '@community http://nl.alpinelinux.org/alpine/v3.5/community' >> /etc/apk/repositories
+
+RUN apk add --update \
+    autoconf \
+    make \
+    g++ \ 
+    libltdl \
+    graphicsmagick-dev@community \
+  && pecl install gmagick-2.0.4RC1 \
+  && docker-php-ext-enable gmagick
+
+RUN docker-php-ext-install -j$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) iconv gd mcrypt mbstring fileinfo curl xmlreader xmlwriter spl ftp mysqli
+
+COPY config/php.ini /usr/local/etc/php/
+
+VOLUME src/:/var/www/html
