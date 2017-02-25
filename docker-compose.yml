@@ -12,8 +12,6 @@ services:
     image: wodby/wordpress-php:latest
     volumes:
       - ./src/:/var/www/html
-    ports:
-      - "9002:9000"
     links:
       - mysql-bison
   mysql-bison:
