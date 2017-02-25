@@ -5,7 +5,7 @@ services:
     volumes:
       - ./src/:/var/www/html
     ports:
-      - "8181:80"
+      - "8686:80"
     links:
       - php-bison
   php-bison:
