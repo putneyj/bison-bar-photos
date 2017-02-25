@@ -1,67 +1,147 @@
-<?php
-/**
- * The main template file
- *
- * This is the most generic template file in a WordPress theme
- * and one of the two required files for a theme (the other being style.css).
- * It is used to display a page when nothing more specific matches a query.
- * E.g., it puts together the home page when no home.php file exists.
- *
- * @link https://codex.wordpress.org/Template_Hierarchy
- *
- * @package WordPress
- * @subpackage Twenty_Seventeen
- * @since 1.0
- * @version 1.0
- */
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
 
-get_header(); ?>
+    <style>
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
 
-<div class="wrap">
-	<?php if ( is_home() && ! is_front_page() ) : ?>
-		<header class="page-header">
-			<h1 class="page-title"><?php single_post_title(); ?></h1>
-		</header>
-	<?php else : ?>
-	<header class="page-header">
-		<h2 class="page-title"><?php _e( 'Posts', 'twentyseventeen' ); ?></h2>
-	</header>
-	<?php endif; ?>
+      .image-div {
+        height: 100%;
+        width: 100%;
+      }
 
-	<div id="primary" class="content-area">
-		<main id="main" class="site-main" role="main">
+      .absolute-center {
+        text-align: center;
+        margin: auto;
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+      }
 
-			<?php
-			if ( have_posts() ) :
+      .hidden {
+        display: none;
+      }
 
-				/* Start the Loop */
-				while ( have_posts() ) : the_post();
+      #no-images-message {
+        height: 100px;
+      }
 
-					/*
-					 * Include the Post-Format-specific template for the content.
-					 * If you want to override this in a child theme, then include a file
-					 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
-					 */
-					get_template_part( 'template-parts/post/content', get_post_format() );
+      #card > div {
+        background-size: 100%;
+      }
+    </style>
+	</head>
+	<body>
+    <div class="hidden absolute-center" id="no-images-message">
+      <h1>There are no images to load!</h1>
+    </div>
+    <div class="hidden image-div absolute-center" id="card"> 
+      <div class="front"> 
+        
+      </div> 
+      <div class="back">
+        
+      </div> 
+    </div>
+    <script type="text/javascript">
+      var images = [];
+      var minutesBetweenUpdates = 1;
+      var secondsBetweenTransitions = 10;
+      var currentImageIndex = -1;
 
-				endwhile;
+      updateImageList();
+      $("#card").flip({
+        'trigger': 'manual',
+        'speed': 1250
+      });
 
-				the_posts_pagination( array(
-					'prev_text' => twentyseventeen_get_svg( array( 'icon' => 'arrow-left' ) ) . '<span class="screen-reader-text">' . __( 'Previous page', 'twentyseventeen' ) . '</span>',
-					'next_text' => '<span class="screen-reader-text">' . __( 'Next page', 'twentyseventeen' ) . '</span>' . twentyseventeen_get_svg( array( 'icon' => 'arrow-right' ) ),
-					'before_page_number' => '<span class="meta-nav screen-reader-text">' . __( 'Page', 'twentyseventeen' ) . ' </span>',
-				) );
+      function updateImageList() {
+        $.getJSON( "wp-json/wp/v2/media", function( data ) {
+          var freshStart = images.length === 0;
 
-			else :
+          if(!_.isEqual(images, data)) {
+            difference = _.differenceBy(data, images, 'id');
+            images = data;
+            console.log('Difference: ' + difference);
+            console.log('Image Data: ' + images);
 
-				get_template_part( 'template-parts/post/content', 'none' );
+            if(difference) {
+              if(freshStart) {
+                console.log("Setting first image");
+                setDivBackground($("#card .front"), images[getNextImageIndex()]);
+              }
+              for(i = 0; i < difference.length; i++) {
+                preload(difference[i].source_url);
+              }
+              swapImages();
+            }
+          } else if (freshStart) {
+            swapImages();
+          }
+        });
+        setTimeout(updateImageList, minutesBetweenUpdates * 60 * 1000);
+      }
 
-			endif;
-			?>
+      function swapImages() {
+        if(images.length > 0) {
+          $('#card').removeClass('hidden');
+          $('#no-images-message').addClass('hidden');
 
-		</main><!-- #main -->
-	</div><!-- #primary -->
-	<?php get_sidebar(); ?>
-</div><!-- .wrap -->
+          var flip = $("#card").data("flip-model");
+          if(flip.isFlipped) {
+            setDivBackground($("#card .back"), images[getNextImageIndex()]);
+          } else {
+            setDivBackground($("#card .front"), images[getNextImageIndex()]);
+          }
+          setTimeout(transitionToNextImage, secondsBetweenTransitions * 1000);
+        } else {
+          $('#card').addClass('hidden');
+          $('#no-images-message').removeClass('hidden');
+        }
+      }
 
-<?php get_footer();
+      function transitionToNextImage() {
+        $("#card").flip('toggle');
+        swapImages();
+      }
+
+      function setDivBackground(div, imageObj) {
+        $(div).css({
+          'background-image': 'url(' + imageObj.source_url + ')'
+        });
+      }
+
+      function getNextImageIndex() {
+        if(images) {
+          currentImageIndex += 1;
+          if(currentImageIndex >= images.length) {
+            currentImageIndex = 0;
+          }
+        } else {
+          currentImageIndex = -1;
+        }
+
+        return currentImageIndex;
+      }
+
+      function preload(url) {
+        $('<img/>')[0].src = url;
+      }
+
+      setTimeout(function() {
+        location.reload();
+      }, 5 * 60 * 1000);
+    </script>
+	</body>
+</html>
