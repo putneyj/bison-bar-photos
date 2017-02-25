@@ -50,7 +50,8 @@
     </div>
     <script type="text/javascript">
       var images = [];
-      var minutesBetweenUpdates = 0.1;
+      var minutesBetweenUpdates = 1;
+      var secondsBetweenTransitions = 10;
       var currentImageIndex = -1;
 
       updateImageList();
@@ -95,7 +96,7 @@
           } else {
             setDivBackground($("#card .front"), images[getNextImageIndex()]);
           }
-          setTimeout(transitionToNextImage, 7 * 1000);
+          setTimeout(transitionToNextImage, secondsBetweenTransitions * 1000);
         } else {
           $('#card').addClass('hidden');
           $('#no-images-message').removeClass('hidden');
