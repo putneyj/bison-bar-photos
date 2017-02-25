@@ -68,7 +68,7 @@
 
       function updateImageList() {
         $.getJSON( "wp-json/wp/v2/media", function( data ) {
-          var freshStart = images.length === 0;
+          var freshStart = !image || images.length === 0;
 
           if(!_.isEqual(images, data)) {
             difference = _.differenceBy(data, images, 'id');
