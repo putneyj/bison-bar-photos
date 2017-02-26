@@ -116,30 +116,17 @@
       }
 
       function transitionToNextImage() {
-        // if(isFlipped()) {
-        //   $('.back').fadeOut('slow');
-        //   $('.front').fadeIn('slow');
-        // } else {
-        //   $('.front').fadeOut('slow');
-        //   $('.back').fadeIn('slow');
-        // }
-        // setTimeout(swapImages, secondsBetweenTransitions * 0.1 * 1000);
-        runToggle(secondsBetweenTransitions * 0.1 * 1000, $('.front'), $('.back'));
-      }
-
-      function runToggle(iDuration, domFirst,domSecond) {
-        $(domFirst).fadeToggle(iDuration, "linear",function() {
-          $(domFirst).fadeToggle(iDuration, "linear",function() {
-            $(domSecond).fadeToggle(iDuration,"linear",function() {
-              $(domSecond).fadeToggle(iDuration,"linear",function() {
-                  setTimeout(function() {
-                      runToggle(iDuration,domFirst,domSecond) ;
-                  },50);
-              });
-            }); 
+        if(isFlipped()) {
+          $('.back').fadeOut('slow', function() {
+            $('.front').fadeIn('slow');
           });
-       }); 
-      };
+        } else {
+          $('.front').fadeOut('slow', function() {
+            $('.back').fadeIn('slow');
+          });
+        }
+        setTimeout(swapImages, secondsBetweenTransitions * 0.1 * 1000);
+      }
 
       function setDivBackground(div, imageObj) {
         $(div).css({
