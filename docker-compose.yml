@@ -9,7 +9,9 @@ services:
     links:
       - php-bison
   php-bison:
-    image: wodby/wordpress-php:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.php-fpm
     volumes:
       - ./src/:/var/www/html
     links:
