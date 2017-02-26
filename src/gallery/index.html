@@ -117,7 +117,7 @@
 
       function transitionToNextImage() {
         $("#card").flip('toggle');
-        swapImages();
+        setTimeout(swapImages, secondsBetweenTransitions * 0.1 * 1000);
       }
 
       function setDivBackground(div, imageObj) {
