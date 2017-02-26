@@ -15,7 +15,7 @@
  * @version 1.0
  */
 
-$location = get_site_url() . "/bison/gallery";
+$location = get_site_url() . "/gallery";
 wp_redirect( $location, 301 );
 exit; 
 
