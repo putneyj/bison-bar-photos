@@ -5,9 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title></title>
     <meta name="description" content="">
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
 
     <style>
@@ -48,11 +46,11 @@
     <div class="hidden absolute-center" id="no-images-message">
       <h1>There are no images to load!</h1>
     </div>
-    <div class="hidden image-div absolute-center" id="card"> 
+    <div class="image-div absolute-center" id="card"> 
       <div class="front"> 
         
       </div> 
-      <div class="back">
+      <div class="back hidden">
         
       </div> 
     </div>
@@ -63,10 +61,6 @@
       var currentImageIndex = -1;
 
       updateImageList();
-      $("#card").flip({
-        'trigger': 'manual',
-        'speed': 1250
-      });
 
       function updateImageList() {
         $.getJSON( "/wp-json/wp/v2/media", function( data ) {
@@ -103,8 +97,7 @@
           $('#card').removeClass('hidden');
           $('#no-images-message').addClass('hidden');
 
-          var flip = $("#card").data("flip-model");
-          if(flip.isFlipped) {
+          if(isFlipped()) {
             setDivBackground($("#card .front"), images[getNextImageIndex()]);
           } else {
             setDivBackground($("#card .back"), images[getNextImageIndex()]);
@@ -116,8 +109,18 @@
         }
       }
 
+      function isFlipped() {
+        return !$('.front').is(':visible');
+      }
+
       function transitionToNextImage() {
-        $("#card").flip('toggle');
+        if(isFlipped()) {
+          $('.back').fadeOut('slow');
+          $('.front').fadeIn('slow');
+        } else {
+          $('.front').fadeOut('slow');
+          $('.back').fadeIn('slow');
+        }
         setTimeout(swapImages, secondsBetweenTransitions * 0.1 * 1000);
       }
 
