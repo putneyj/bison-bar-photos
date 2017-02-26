@@ -117,12 +117,12 @@
 
       function transitionToNextImage() {
         if(isFlipped()) {
-          $('.back').fadeOut('slow', function() {
-            $('.front').fadeIn('slow');
+          $('.back').hide(0, function() {
+            $('.front').show(0);
           });
         } else {
-          $('.front').fadeOut('slow', function() {
-            $('.back').fadeIn('slow');
+          $('.front').hide(0, function() {
+            $('.back').show(0);
           });
         }
         setTimeout(swapImages, secondsBetweenTransitions * 0.1 * 1000);
