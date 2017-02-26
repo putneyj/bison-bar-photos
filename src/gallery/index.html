@@ -84,6 +84,7 @@
               if(freshStart) {
                 console.log("Setting first image");
                 setDivBackground($("#card .front"), images[getNextImageIndex()]);
+                setDivBackground($("#card .back"), images[getNextImageIndex()]);
               }
               for(i = 0; i < difference.length; i++) {
                 preload(difference[i].source_url);
@@ -104,9 +105,9 @@
 
           var flip = $("#card").data("flip-model");
           if(flip.isFlipped) {
-            setDivBackground($("#card .back"), images[getNextImageIndex()]);
-          } else {
             setDivBackground($("#card .front"), images[getNextImageIndex()]);
+          } else {
+            setDivBackground($("#card .back"), images[getNextImageIndex()]);
           }
           setTimeout(transitionToNextImage, secondsBetweenTransitions * 1000);
         } else {
