@@ -11,7 +11,7 @@ services:
   php-bison:
     build:
       context: .
-      dockerfile: Dockerfile.php-fpm
+      dockerfile: config/Dockerfile.php-fpm
     volumes:
       - ./src/:/var/www/html
     links:
