@@ -80,12 +80,11 @@
               if(freshStart) {
                 console.log("Setting first image");
                 setDivBackground($("#card .front"), images[getNextImageIndex()]);
-                setDivBackground($("#card .back"), images[getNextImageIndex()]);
               }
+              swapImages();
               for(i = 0; i < difference.length; i++) {
                 preload(difference[i].source_url);
               }
-              swapImages();
             }
           } else if (freshStart) {
             swapImages();
