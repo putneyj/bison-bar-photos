@@ -64,13 +64,12 @@
       var minutesBetweenUpdates = 1;
       var secondsBetweenTransitions = 10;
       var currentImageIndex = -1;
+      var freshStart = true;
 
       updateImageList();
 
       function updateImageList() {
         $.getJSON( "/wp-json/wp/v2/media", function( data ) {
-          var freshStart = images.length == 0;
-
           console.log("Fresh start: " + freshStart)
 
           if(!_.isEqual(images, data)) {
@@ -81,6 +80,7 @@
 
             if(difference) {
               if(freshStart) {
+                freshStart = false;
                 console.log("Setting first image");
                 setDivBackground($("#card .front"), images[getNextImageIndex()]);
                 swapImages();
