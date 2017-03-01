@@ -65,6 +65,7 @@
       var secondsBetweenTransitions = 10;
       var currentImageIndex = -1;
       var freshStart = true;
+      var refreshIntervalId = null;
 
       setInterval(updateImageList, minutesBetweenUpdates * 60 * 1000);
 
@@ -88,7 +89,10 @@
                 preload(difference[i].source_url);
               }
 
-              setInterval(swapImages, secondsBetweenTransitions * 1000);
+              if(refreshIntervalId) {
+                clearInterval(refreshIntervalId);
+              }
+              refreshIntervalId = setInterval(swapImages, secondsBetweenTransitions * 1000);
             }
           }
         });
