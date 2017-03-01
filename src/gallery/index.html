@@ -69,7 +69,7 @@
       updateImageList();
 
       function updateImageList() {
-        $.getJSON( "/wp-json/wp/v2/media", function( data ) {
+        $.getJSON( "https://bison.putney.io/wp-json/wp/v2/media", function( data ) {
           console.log("Fresh start: " + freshStart)
 
           if(!_.isEqual(images, data)) {
@@ -83,11 +83,12 @@
                 freshStart = false;
                 console.log("Setting first image");
                 setDivBackground($("#card .front"), images[getNextImageIndex()]);
-                swapImages();
               }
               for(i = 0; i < difference.length; i++) {
                 preload(difference[i].source_url);
               }
+
+              setInterval(swapImages, secondsBetweenTransitions * 1000);
             }
           }
         });
@@ -104,7 +105,16 @@
           } else {
             setDivBackground($("#card .back"), images[getNextImageIndex()]);
           }
-          setTimeout(transitionToNextImage, secondsBetweenTransitions * 1000);
+          
+          if(isFlipped()) {
+            $('.back').hide(0, function() {
+              $('.front').show(0);
+            });
+          } else {
+            $('.front').hide(0, function() {
+              $('.back').show(0);
+            });
+          }
         } else {
           $('#card').addClass('hidden');
           $('#no-images-message').removeClass('hidden');
@@ -113,19 +123,6 @@
 
       function isFlipped() {
         return !$('.front').is(':visible');
-      }
-
-      function transitionToNextImage() {
-        if(isFlipped()) {
-          $('.back').hide(0, function() {
-            $('.front').show(0);
-          });
-        } else {
-          $('.front').hide(0, function() {
-            $('.back').show(0);
-          });
-        }
-        setTimeout(swapImages, secondsBetweenTransitions * 0.1 * 1000);
       }
 
       function setDivBackground(div, imageObj) {
