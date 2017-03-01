@@ -67,6 +67,7 @@
       var freshStart = true;
       var refreshIntervalId = null;
 
+      updateImageList();
       setInterval(updateImageList, minutesBetweenUpdates * 60 * 1000);
 
       function updateImageList() {
